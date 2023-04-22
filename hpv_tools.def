@@ -1,0 +1,21 @@
+Bootstrap: docker
+From: ubuntu:16.04
+Stage: builder
+
+%post
+
+su -  root # USER root
+
+apt-get -y update
+apt-get -y install wget bash bzip2 git curl build-essential python
+wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh
+bash Miniconda2-latest-Linux-x86_64.sh -b -f -p /usr/local/
+rm -f Miniconda2-latest-Linux-x86_64.sh
+conda install -c bioconda -y biopython samtools=1.9 bowtie2=2.2.6 pysam=0.15.0 bedtools=2.26.0 pandas numpy psutil=5.4.3 bcftools
+
+%environment
+export LC_ALL=C
+export PATH=/usr/local/bin:$PATH
+
+%runscript
+exec /bin/bash "$@"
