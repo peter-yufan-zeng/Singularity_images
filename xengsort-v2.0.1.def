@@ -1,0 +1,21 @@
+Bootstrap: docker
+From: ubuntu:22.04
+Stage: builder
+
+%post
+
+su -  root # USER root
+
+apt-get -y update
+apt-get -y install wget gzip pigz
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+bash Miniconda3-latest-Linux-x86_64.sh -b -f -p /usr/local/
+rm -f Miniconda3-latest-Linux-x86_64.sh
+conda install -c bioconda -c conda-forge -y python=3.11 xengsort==2.0.1
+
+%environment
+export LC_ALL=C
+export PATH=/usr/local/bin:$PATH
+
+%runscript
+exec /bin/bash "$@"
